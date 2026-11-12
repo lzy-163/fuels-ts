@@ -1,0 +1,73 @@
+name: BFP isolated verification e8972a3beb0d
+'on':
+  push:
+    branches:
+    - bfp-isolated-e8972a3beb0d
+permissions: {}
+jobs:
+  buggy:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - event: push
+          draft: false
+        - event: pull_request
+          draft: false
+        - event: pull_request
+          draft: true
+    steps:
+    - name: Observe validate-pr
+      env:
+        OBSERVED: ${{ true }}
+        EXPECTED: ${{ matrix.event == 'pull_request' }}
+      run: 'printf "observed=%s expected=%s
+
+        " "$OBSERVED" "$EXPECTED"
+
+        test "$OBSERVED" = "$EXPECTED"'
+      if: ${{ !cancelled() }}
+    - name: Observe coverage-report
+      env:
+        OBSERVED: ${{ true }}
+        EXPECTED: ${{ matrix.event == 'pull_request' }}
+      run: 'printf "observed=%s expected=%s
+
+        " "$OBSERVED" "$EXPECTED"
+
+        test "$OBSERVED" = "$EXPECTED"'
+      if: ${{ !cancelled() }}
+  human:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - event: push
+          draft: false
+        - event: pull_request
+          draft: false
+        - event: pull_request
+          draft: true
+    steps:
+    - name: Observe validate-pr
+      env:
+        OBSERVED: ${{ matrix.event == 'pull_request' }}
+        EXPECTED: ${{ matrix.event == 'pull_request' }}
+      run: 'printf "observed=%s expected=%s
+
+        " "$OBSERVED" "$EXPECTED"
+
+        test "$OBSERVED" = "$EXPECTED"'
+      if: ${{ !cancelled() }}
+    - name: Observe coverage-report
+      env:
+        OBSERVED: ${{ matrix.event == 'pull_request' }}
+        EXPECTED: ${{ matrix.event == 'pull_request' }}
+      run: 'printf "observed=%s expected=%s
+
+        " "$OBSERVED" "$EXPECTED"
+
+        test "$OBSERVED" = "$EXPECTED"'
+      if: ${{ !cancelled() }}
